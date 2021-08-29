@@ -1,0 +1,160 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+		<style>
+		body { margin: 0 }
+		#map { height: 80vh; }
+		#data { height: 20vh; background: gray}
+		#dataTable { width: 100% }
+		.custom-control{
+			background-color: white;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 20px 20px;
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+		}
+		tr{
+			text-align: center;
+			font-size: 20px;
+			color: white;
+		}
+		.clickable{ cursor: pointer }
+		.custom-control-to-location{background-image: url("data:image/png;base64,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");}
+		</style>
+	</head>
+	<body>
+		<div id="map"></div>
+		<div id="data">
+			<table id="dataTable">
+				<tr>
+					<th>SensorID</th>
+					<th>Satellites</th>
+					<th>Humi</th>
+					<th>Temp</th>
+					<th>Last Connection</th>
+				<tr>
+			</table>
+		</div>
+	</body>
+	<script>
+let map;
+let actuators = {};
+document.addEventListener('DOMContentLoaded', function() {
+	let osmUrl = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
+	osmAttrib = '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	osm = L.tileLayer(osmUrl, {
+	  maxZoom: 18,
+	  attribution: osmAttrib
+	});
+	map = L.map('map').setView([51.1580421, 12.3036353], 5).addLayer(osm);
+	
+	let toLocationControl =  L.Control.extend({        
+	options: {
+	  position: 'topright'
+	},
+	onAdd: function (map) {
+	  let wrapper = L.DomUtil.create('div', "leaflet-control leaflet-bar");
+	  let location = L.DomUtil.create('a', "custom-control custom-control-to-location", wrapper);
+	  location.type="a";
+	  location.title="Zum eigenen Standord";
+	  location.value = "";
+	  location.onclick = function(){
+		if (navigator.geolocation) {
+		  navigator.geolocation.getCurrentPosition(function(position) {
+			latit = position.coords.latitude;
+			longit = position.coords.longitude;
+			//L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+			map.flyTo(new L.LatLng(position.coords.latitude, position.coords.longitude), 12);
+		} 
+		)}
+	  };
+	  return wrapper;
+	}
+	});
+	map.addControl(new toLocationControl());
+});
+(function() {
+
+    let ws;
+
+    function showMessage(message) {
+		let jsonData = JSON.parse(message);
+		for ( actuatorKey in jsonData["actuators"]){
+			console.log(actuatorKey);
+			console.log(jsonData["actuators"][actuatorKey]);
+			if ( actuators[actuatorKey] == undefined) {
+				actuators[actuatorKey] = L.marker(map.getCenter()).addTo(map);
+				
+				// Add DataTable Row
+				let row = document.createElement("tr");
+				row.setAttribute("id", actuatorKey);
+				let dataTable = document.getElementById("dataTable");
+				dataTable.appendChild(row);
+			}
+			let lat = (jsonData["actuators"][actuatorKey]["latitude"]);
+			let lng = (jsonData["actuators"][actuatorKey]["longitude"]);
+			let newLatLng = new L.LatLng(lat, lng);
+			actuators[actuatorKey].setLatLng(newLatLng); 
+			actuators[actuatorKey].bindPopup(
+				  "<b>Satellites: </b>" + jsonData["actuators"][actuatorKey]["satellites"] + "<br>"
+				+ "<b>Altitude: </b>" + jsonData["actuators"][actuatorKey]["altitude"] + "<br>"
+				+ "<b>Temp: </b>" + jsonData["actuators"][actuatorKey]["temp"] + "<br>"
+				+ "<br> <b>Humi: </b>" + jsonData["actuators"][actuatorKey]["humi"] + "<br>");
+				
+			// Add DataTable Data
+			let dataTableRow = document.getElementById(actuatorKey);
+			dataTableRow.innerHTML = '';
+			
+			let cellId = document.createElement("td");
+			cellId.appendChild(document.createTextNode(actuatorKey));
+			cellId.setAttribute("onclick", "javascript: map.flyTo(new L.LatLng(" + lat + ", " + lng + "), 17);");
+			cellId.setAttribute("class", "clickable");
+			dataTableRow.appendChild(cellId);
+			
+			let cellSats = document.createElement("td");
+			cellSats.appendChild(document.createTextNode(jsonData["actuators"][actuatorKey]["satellites"]));
+			dataTableRow.appendChild(cellSats);
+			
+			let cellHum = document.createElement("td");
+			cellHum.appendChild(document.createTextNode(jsonData["actuators"][actuatorKey]["humi"]));
+			dataTableRow.appendChild(cellHum);
+			
+			let cellTemp = document.createElement("td");
+			cellTemp.appendChild(document.createTextNode(jsonData["actuators"][actuatorKey]["temp"]));
+			dataTableRow.appendChild(cellTemp);
+			
+			let cellLastCon = document.createElement("td");
+			let today = new Date();
+			let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+			cellLastCon.appendChild(document.createTextNode(time));
+			dataTableRow.appendChild(cellLastCon);
+		}
+		console.log(jsonData);
+    }
+
+    function init() {
+      if (ws) {
+        ws.onerror = ws.onopen = ws.onclose = null;
+        ws.close();
+      }
+
+      ws = new WebSocket('wss://URL/socket.io');
+      ws.onopen = () => {
+        console.log('Connection opened!');
+      }
+      ws.onmessage = ({ data }) => showMessage(data);
+      ws.onclose = function() {
+        ws = null;
+      }
+    }
+    init();
+  })();
+	</script>
+</html>
